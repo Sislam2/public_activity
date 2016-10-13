@@ -4,14 +4,21 @@ module PublicActivity
   # Class used to initialize configuration object.
   class Config
     include ::Singleton
-    attr_accessor :enabled, :table_name
+    attr_accessor :table_name
 
     @@orm = :active_record
 
     def initialize
       # Indicates whether PublicActivity is enabled globally
-      @enabled    = true
       @table_name = "activities"
+    end
+
+    def enabled
+      Thread.current["public_activity_enabled"].nil? ? true : Thread.current["public_activity_enabled"]
+    end
+
+    def enabled=(arg)
+      Thread.current["public_activity_enabled"]=arg
     end
 
     # Evaluates given block to provide DSL configuration.
